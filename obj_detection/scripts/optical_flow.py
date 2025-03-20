@@ -11,7 +11,7 @@ def detection_callback(image_msg):
     global bridge, prev_frame
     image_header=image_msg.header
     msg_id=image_header.frame_id
-    rospy.loginfo(f"current frame {msg_id}")
+    #rospy.loginfo(f"current frame {msg_id}")
     frame= bridge.imgmsg_to_cv2(image_msg,desired_encoding="bgr8")
     curr_frame= cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
 

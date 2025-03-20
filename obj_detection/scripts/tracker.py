@@ -25,6 +25,7 @@ def detection_callback(detect_list):
     
     
     frame_id=detect_list.header.frame_id 
+    
     #creating custom frame
     #width, height = 1280, 720  
     #black_screen = np.zeros((height, width, 3), dtype=np.uint8)    
@@ -40,7 +41,7 @@ def detection_callback(detect_list):
         x1,y1,x2,y2=detect.x1,detect.y1,detect.x2,detect.y2
         conf,img_info=detect.conf,detect.img_info
         class_name,class_id=detect.class_name,detect.class_id
-        rospy.loginfo(f"Tracking on frame{frame_id}! ")
+        #rospy.loginfo(f"Tracking on frame{frame_id}! ")
         detections.append([x1,y1,x2,y2,conf,class_id])
    
     ########## Preparing data for Bytetracker ########
@@ -66,6 +67,7 @@ def detection_callback(detect_list):
         res_info.y1 = y1
         res_info.x2 = x2
         res_info.y2 = y2
+        res_info.class_name=class_name
         res_info.conf = float(obj.score)
         res_info.img_info=img_info
         res_info.track_id=int(obj.track_id)
@@ -73,19 +75,19 @@ def detection_callback(detect_list):
 
         
         # testing results on custom frame
-        #cv2.rectangle(black_screen, (x1, y1), (x2, y2), (0, 255, 0), 2)  # Draw box
-        #cv2.putText(black_screen, f"ID: {obj.track_id}", (x1, y1 - 10),
+        #cv2.rectangle(black_screen, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        #cv2.putText(black_screen, f"ID: {obj.track_id} {class_name}", (x1, y1 - 10),
                #cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     #cv2.imshow("Tracking", black_screen)
     #cv2.waitKey(1)
-    Seg_pub.publish(tracker_msg)
+    tracker_pub.publish(tracker_msg)
 
 
 if __name__=="__main__":
     node_name ="tracker"
     seg_topic ="/seg_list"
     tracker_topic="/tracker_list"
-    Seg_pub =rospy.Publisher(f'{tracker_topic}',tracker_list,queue_size=1000) 
+    tracker_pub =rospy.Publisher(f'{tracker_topic}',tracker_list,queue_size=1000) 
     rospy.init_node(node_name)
     rospy.Subscriber(f'{seg_topic}', detect_list,detection_callback)
 

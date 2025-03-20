@@ -26,7 +26,7 @@ def video_stream():
         ros_image.header.frame_id=str(frame_id)
         frame_id=frame_id+1
         pub.publish(ros_image)
-        rospy.loginfo(f"Published frame {frame_id}")
+        #rospy.loginfo(f"Published frame {frame_id}")
         rate.sleep()
     video.release()
 

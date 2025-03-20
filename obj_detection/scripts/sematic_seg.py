@@ -17,11 +17,12 @@ def detection_callback(image_msg):
     
     frame= bridge.imgmsg_to_cv2(image_msg,desired_encoding="bgr8")
 
-    detection_results= model(frame)[0]
-    rospy.loginfo(f"Detection is running on frame {msg_id}! {frame.shape}")
+    detection_results= model(frame, conf=0.4, iou=0.4)[0]
+    #rospy.loginfo(f"Detection is running on frame {msg_id}! {frame.shape}")
     
     detect_msg =detect_list()
     detect_msg.header = image_header
+    
     for mask, box in zip(detection_results.masks.xy,detection_results.boxes):
         
         #mask_np= np.array([mask], dtype= np.int32)
@@ -40,10 +41,11 @@ def detection_callback(image_msg):
         Seg_info.conf = conf
         Seg_info.class_name = class_name
         Seg_info.img_info=frame.shape
+        Seg_info.class_id=class_id
         detect_msg.detect.append(Seg_info)
 
         #cv2.rectangle(frame,(x1,y1),(x2,y2),(0,255,0),2)
-        #cv2.putText(frame,f'{class_name} {class_id}',(x1,y1-10),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,0,0))
+        #cv2.putText(frame,f'{class_name} {class_id} {int(conf*100)}%',(x1,y1-10),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,0,0))
     Seg_pub.publish(detect_msg)
     #cv2.imshow("detection",frame)
     #cv2.waitKey(1)
