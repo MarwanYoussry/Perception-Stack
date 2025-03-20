@@ -10,16 +10,15 @@ bridge=CvBridge()
 def detection_callback(image_msg):
     global bridge, prev_frame
     image_header=image_msg.header
-    msg_timestamp=image_header.stamp
     msg_id=image_header.frame_id
-    
+    rospy.loginfo(f"current frame {msg_id}")
     frame= bridge.imgmsg_to_cv2(image_msg,desired_encoding="bgr8")
     curr_frame= cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-    method=cv2.calcOpticalFlowFarneback
-    #params = [0.5, 3, 15, 3, 5, 1.2, 0]
+
     if prev_frame is not None:
         flow = cv2.calcOpticalFlowFarneback(prev_frame, curr_frame, None,0.5, 3, 15, 3, 5, 1.2, 0)
         flow_msg=bridge.cv2_to_imgmsg(flow, encoding="32FC2")
+        flow_msg.header=image_msg.header
 
         Optical_pub.publish(flow_msg)
 
