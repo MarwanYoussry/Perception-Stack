@@ -59,7 +59,7 @@ if __name__=="__main__":
     vid_topic ="/video"
     node_name ="sematic_seg"
     seg_topic ="/seg_list"
-    Seg_pub =rospy.Publisher(f'{seg_topic}',detect_list,queue_size=1000) 
+    Seg_pub =rospy.Publisher(f'{seg_topic}',detect_list,queue_size=500) 
     rospy.init_node(node_name)
     rospy.Subscriber(f'{vid_topic}', Image,detection_callback)
 

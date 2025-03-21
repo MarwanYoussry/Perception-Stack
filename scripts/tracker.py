@@ -87,7 +87,7 @@ if __name__=="__main__":
     node_name ="tracker"
     seg_topic ="/seg_list"
     tracker_topic="/tracker_list"
-    tracker_pub =rospy.Publisher(f'{tracker_topic}',tracker_list,queue_size=1000) 
+    tracker_pub =rospy.Publisher(f'{tracker_topic}',tracker_list,queue_size=500) 
     rospy.init_node(node_name)
     rospy.Subscriber(f'{seg_topic}', detect_list,detection_callback)
 

@@ -40,7 +40,7 @@ if __name__=="__main__":
     vid_topic ="/video"
     node_name ="optical_flow"
     opt_topic ="/optical_img"
-    Optical_pub =rospy.Publisher(f'{opt_topic}',Image,queue_size=1000) 
+    Optical_pub =rospy.Publisher(f'{opt_topic}',Image,queue_size=500) 
     rospy.init_node(node_name)
     rospy.Subscriber(f'{vid_topic}', Image,detection_callback)
 

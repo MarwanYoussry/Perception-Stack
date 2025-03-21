@@ -6,15 +6,15 @@ from cv_bridge import CvBridge
 
 def video_stream():
     rospy.init_node("video")
-    pub =rospy.Publisher("/video",Image,queue_size=1000)
+    pub =rospy.Publisher("/video",Image,queue_size=500)
     bridge =CvBridge()
-
+    rospy.loginfo("Streaming Video")
     video=cv2.VideoCapture("/home/mohamed/catkin_ws/src/obj_detection/scripts/test_video")
     if not video.isOpened():
             rospy.logerr("Failed")
             return
     frame_id=0
-    rate=rospy.Rate(1)
+    rate=rospy.Rate(5)
     while not rospy.is_shutdown():
         ret, frame =video.read()
 
@@ -26,7 +26,7 @@ def video_stream():
         ros_image.header.frame_id=str(frame_id)
         frame_id=frame_id+1
         pub.publish(ros_image)
-        #rospy.loginfo(f"Published frame {frame_id}")
+        rospy.loginfo(f"Published frame {frame_id}")
         rate.sleep()
     video.release()
 
